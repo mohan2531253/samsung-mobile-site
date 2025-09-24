@@ -4,15 +4,16 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-               git branch: 'main', url:https://github.com/mohan2531253/samsung-mobile-site.git
-            }
-        } 
-        stage('Build') {
-            steps {
-                sh 'mvn clean package -DskipTests'
+                git branch: 'main', url: 'https://github.com/mohan2531253/samsung-mobile-site.git'
             }
         }
-
+        stage('Build') {
+            steps {
+                sh 'echo "Building project..."'
+            }
+        }
+    }
+}
 
         stage('Build Docker Image') {
             steps {
