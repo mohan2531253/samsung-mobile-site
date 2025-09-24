@@ -7,6 +7,7 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/mohan2531253/samsung-mobile-site.git'
             }
         }
+
         stage('Build') {
             steps {
                 sh 'echo "Building project..."'
@@ -23,28 +24,29 @@ pipeline {
 
         stage('Push to DockerHub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'mohan2366-dockerhub', usernameVariable: 'mohan2366', passwordVariable: 'PASS')]) {
-                    sh "echo $PASS | docker login -u $USER --password-stdin"
-                    sh "docker push mohan2366/samsung-site:v1"
+                withCredentials([usernamePassword(credentialsId: 'mohan2366-dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh """
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push mohan2366/samsung-site:v1
+                    """
                 }
             }
         }
 
         stage('Run Container (Local Test)') {
             steps {
-                sh 'docker run -d -p 8081:80 --name samsung-site-test mohan2366/samsung-site:v1 || true'
+                sh 'docker rm -f samsung-site-test || true'
+                sh 'docker run -d -p 8081:80 --name samsung-site-test mohan2366/samsung-site:v1'
             }
         }
 
         stage('Deploy to Docker Swarm') {
             steps {
                 sh '''
-                docker service rm samsung-site || true
-                docker service create --name samsung-site -p 8081:80 mohan2366/samsung-site:v1
+                    docker service rm samsung-site || true
+                    docker service create --name samsung-site -p 8081:80 mohan2366/samsung-site:v1
                 '''
             }
         }
     }
 }
-
-
