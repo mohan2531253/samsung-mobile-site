@@ -22,15 +22,17 @@ pipeline {
             }
         }
 
-        stage('Push to DockerHub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'mohan2366-dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh """
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker push mohan2366/samsung-site:v1
-                    """
-                }
-            }
+       stage('Push to DockerHub') {
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'mohan2366-dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+            sh """
+                echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                docker push mohan2366/samsung-site:v1
+            """
+        }
+    }
+}
+
         }
 
         stage('Run Container (Local Test)') {
