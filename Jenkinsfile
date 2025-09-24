@@ -42,14 +42,6 @@ pipeline {
             }
         }
 
-        stage('Deploy to Docker Swarm') {
-            steps {
-                sh '''
-                    docker service rm samsung-site || true
-                    docker service create --name samsung-site -p 8081:80 mohan2366/samsung-site:v1
-                '''
-            }
-        }
     }
 }
 
