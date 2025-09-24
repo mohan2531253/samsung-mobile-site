@@ -23,7 +23,7 @@ pipeline {
 
         stage('Push to DockerHub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'mohan2366-dockerhub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                withCredentials([usernamePassword(credentialsId: 'mohan2366-dockerhub', usernameVariable: 'mohan2366', passwordVariable: 'PASS')]) {
                     sh "echo $PASS | docker login -u $USER --password-stdin"
                     sh "docker push mohan2366/samsung-site:v1"
                 }
